@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SharpDX.Direct2D1.Effects;
 using Zelda;
 
 namespace Project1
@@ -23,6 +24,7 @@ namespace Project1
             IsMouseVisible = true;
         }
 
+
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
@@ -34,8 +36,8 @@ namespace Project1
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            tileset = Content.Load<Texture2D>("tileMap");
             tileManager = new TileManager();
+            tileset = Content.Load<Texture2D>("tileMap");
             tileManager.LoadTileMap("tilemap.txt", tileset);
 
             // TODO: use this.Content to load your game content here
@@ -57,7 +59,7 @@ namespace Project1
 
             // TODO: Add your drawing code here
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, Matrix.CreateScale(1.75f));
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null, null, Matrix.CreateScale(1.75f));
             tileManager.Draw(spriteBatch);
             spriteBatch.End();
 

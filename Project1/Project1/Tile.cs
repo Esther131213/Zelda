@@ -8,19 +8,19 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace Zelda
 {
-    internal class Player
+    public class Tile
     {
-        float speed;
-        new Vector2 pos;
-        Texture2D tex;
+        public bool isWalkable = true;
+        public Rectangle sourceRectangle;
 
-        public Player(Texture2D tex, Vector2 pos)
+        public Tile(bool isWalkable, Rectangle sourceRectangle)
         {
-            this.tex = tex;
-            this.pos = pos;
+            this.isWalkable = isWalkable;
+            this.sourceRectangle = sourceRectangle;
         }
     }
 }
