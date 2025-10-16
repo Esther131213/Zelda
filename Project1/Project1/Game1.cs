@@ -1,17 +1,24 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Zelda;
 
 namespace Project1
 {
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        private SpriteBatch spriteBatch;
+
+        TileManager tileManager;
+        Texture2D tileset;
+        int tileSize = 16;
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
+            _graphics.PreferredBackBufferWidth =1286;
+            _graphics.PreferredBackBufferHeight =810;
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
@@ -25,7 +32,11 @@ namespace Project1
 
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            tileset = Content.Load<Texture2D>("tileMap");
+            tileManager = new TileManager();
+            tileManager.LoadTileMap("tilemap.txt", tileset);
 
             // TODO: use this.Content to load your game content here
         }
@@ -42,9 +53,13 @@ namespace Project1
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
+
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, Matrix.CreateScale(1.75f));
+            tileManager.Draw(spriteBatch);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

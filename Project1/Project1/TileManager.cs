@@ -7,37 +7,54 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 
 namespace Zelda
 {
     internal class TileManager
     {
         int[,] tileMap;
+        int[,] tiles;
 
         Texture2D tileset;
-        int tileSize = 32;
+        int tileSize = 16;
 
-        void LoadTileMap(string filePath)
+        public void LoadTileMap(string filePath, Texture2D tileset)
         {
+            this.tileset = tileset;
             var lines = File.ReadAllLines(filePath);
             int rows = lines.Length;
-            int cols = lines[0].Split(",").Length;
+            int cols = lines.Max(x => x.Length);
 
-            tileMap = new int[rows, cols];
+            tiles = new int[cols, rows];
+
 
             for (int y = 0; y < rows; y++)
             {
                 var tiles = lines[y].Split(",");
                 for (int x = 0; x < cols; x++)
                 {
-                    tileMap[x,y] = int.Parse(tiles[x]);
+                    this.tiles[x, y] = int.Parse(new string(lines[y][x], 1));
+                    Debug.WriteLine(this.tiles[x, y]);
                 }
             }
         }
 
-        void Draw(SpriteBatch sp)
+        public void Draw(SpriteBatch spriteBatch)
         {
-
+            for (int y = 0; y < tiles.GetLength(1); y++)
+            {
+                for (int x = 0; x < tiles.GetLength(0); x++)
+                {
+                    int tileId = tiles[x, y];
+                    if (tileId >= 0)
+                    {
+                        var sourceRectangle = new Rectangle(tileId * tileSize,0,tileSize, tileSize);
+                        var destinationRectangle = new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize);
+                        spriteBatch.Draw(tileset, destinationRectangle, sourceRectangle, Color.White);
+                    }
+                }
+            }
         }
     }
 }
