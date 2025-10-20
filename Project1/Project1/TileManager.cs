@@ -15,7 +15,7 @@ namespace Zelda
 {
     internal class TileManager
     {
-        public int[,] tiles;
+        public static int[,] tiles;
         Texture2D tileset;
         readonly int tileSize = 16;
         public Tile[] tileTypes;
@@ -40,10 +40,10 @@ namespace Zelda
 
             for (int y = 0; y < rows; y++)
             {
-                var tiles = lines[y].Split(",");
+                var tileslines = lines[y].Split(",");
                 for (int x = 0; x < cols; x++)
                 {
-                    this.tiles[x, y] = int.Parse(new string(lines[y][x], 1));
+                    tiles[x, y] = int.Parse(new string(lines[y][x], 1));
                 }
             }
         }
@@ -52,6 +52,13 @@ namespace Zelda
         {
             return new Vector2(x * tileSize, y * tileSize);
         }
+
+        /*
+        public static bool GetTileAtPosition(Vector2 vec)
+        {
+            return tileTypes[(int)vec.X / 50, (int)vec.Y / 50].isWalkable;
+        }
+        */
 
         public void Draw(SpriteBatch spriteBatch)
         {
