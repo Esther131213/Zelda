@@ -75,7 +75,7 @@ namespace Project1
 
             // TODO: Add your drawing code here
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null, null, Matrix.CreateScale(1.75f));
+            spriteBatch.Begin();
             tileManager.Draw(spriteBatch);
             player.Draw(spriteBatch);
             spriteBatch.End();
