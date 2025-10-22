@@ -9,7 +9,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using System.Runtime.InteropServices.WindowsRuntime;
-using SharpDX.Direct2D1.Effects;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using System.ComponentModel;
@@ -53,27 +52,28 @@ namespace Zelda
                 {
                     char tileType = Map[y][x];
                     Vector2 tilePos = new Vector2(x * tileSize, y * tileSize);
-                    tileId = Convert.ToInt32(tileType);
+                    tileId = tileType - '0';
+                    sourceRectangle = new Rectangle(tileId * tileSize, 0, tileSize, tileSize);
 
                     if (tileId == 0)
                     {
-                        tiles[y, x] = new Tile(true, sourceRectangle, tileset, tilePos);
+                        tiles[x, y] = new Tile(true, sourceRectangle, tileset, tilePos);
                     }
                     else if (tileId == 1)
                     {
-                        tiles[y, x] = new Tile(false, sourceRectangle, tileset, tilePos);
+                        tiles[x, y] = new Tile(false, sourceRectangle, tileset, tilePos);
                     }
                     else if (tileId == 2)
                     {
-                        tiles[y, x] = new Tile(false, sourceRectangle, tileset, tilePos);
+                        tiles[x, y] = new Tile(false, sourceRectangle, tileset, tilePos);
                     }
                     else if (tileId == 3)
                     {
-                        tiles[y, x] = new Tile(false, sourceRectangle, tileset, tilePos);
+                        tiles[x, y] = new Tile(false, sourceRectangle, tileset, tilePos);
                     }
                     else if (tileId == 4)
                     {
-                        tiles[y, x] = new Tile(true, sourceRectangle, tileset, tilePos);
+                        tiles[x, y] = new Tile(true, sourceRectangle, tileset, tilePos);
                     }
                 }
             }
@@ -84,18 +84,13 @@ namespace Zelda
             return new Vector2(x * tileSize, y * tileSize);
         }
 
-        public static bool GetTileAtPosition(Vector2 vec)
-        {
-            return tiles[(int)vec.X / 50, (int)vec.Y / 50].isWalkable;
-        }
-
         public void Draw(SpriteBatch spriteBatch)
         {
             for (int y = 0; y < tiles.GetLength(1); y++)
             {
                 for (int x = 0; x < tiles.GetLength(0); x++)
                 {
-                    tiles[y, x].Draw(spriteBatch);
+                    tiles[x, y].Draw(spriteBatch);
                 }
             }
         }

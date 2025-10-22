@@ -1,12 +1,15 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using SharpDX.Direct2D1.Effects;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using Zelda;
+using System.Diagnostics;
 
 namespace Project1
 {
@@ -38,6 +41,11 @@ namespace Project1
             StartScreen,
             GamePlay,
             GameEnd
+        }
+
+        public static bool GetTileAtPosition(Vector2 vec)
+        {
+            return TileManager.tiles[(int)vec.X/16, (int)vec.Y/16].isWalkable;
         }
 
         protected override void Initialize()
@@ -74,8 +82,8 @@ namespace Project1
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
-
-            spriteBatch.Begin();
+            float zoom = 1.75f;
+            spriteBatch.Begin(SpriteSortMode.BackToFront, null, SamplerState.PointWrap, null, transformMatrix: Matrix.CreateScale(zoom));
             tileManager.Draw(spriteBatch);
             player.Draw(spriteBatch);
             spriteBatch.End();

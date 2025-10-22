@@ -16,7 +16,7 @@ namespace Zelda
     {
         public bool isWalkable = true;
         public Rectangle sourceRectangle;
-        Texture2D tex;
+        public Texture2D tex;
         Vector2 pos;
         int tileSize = 16;
 
@@ -30,7 +30,7 @@ namespace Zelda
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(tex, new Rectangle((int)pos.X, (int)pos.Y, tileSize, tileSize), Color.White);
+            spriteBatch.Draw(tex, new Rectangle((int)pos.X, (int)pos.Y, tileSize, tileSize), sourceRectangle, Color.White);
         }
     }
 }

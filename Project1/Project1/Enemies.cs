@@ -13,12 +13,15 @@ namespace Zelda
 {
     internal class Enemies
     {
-        new Vector2 pos;
+        new Vector2 startPos;
+        new Vector2 endPos;
+        new Vector2 currentPos;
         Texture2D tex;
 
-        public Enemies(Vector2 pos, Texture2D tex)
+        public Enemies(Vector2 startpos, Vector2 endPos, Texture2D tex)
         {
-            this.pos = pos;
+            this.startPos = startpos;
+            this.endPos = endPos;
             this.tex = tex;
         }
     }

@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
+using Project1;
 
 namespace Zelda
 {
@@ -15,14 +16,13 @@ namespace Zelda
     {
         TileManager tileManager;
 
-        float speed;
         new Vector2 pos;
         Texture2D tex;
         public bool hasKey = false;
         float moveDistance = 16; //Same as tile width and height
         KeyboardState previousKeyState;
         bool canWalk = true;
-        Rectangle hitBox;
+        //Rectangle hitBox;
 
         Vector2 nextPos;
 
@@ -37,46 +37,72 @@ namespace Zelda
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
                 nextPos = new Vector2(pos.X, pos.Y - moveDistance);
+                Debug.WriteLine(nextPos);
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.A))
+            {
+                nextPos = new Vector2(pos.X - moveDistance, pos.Y);
+                Debug.WriteLine(nextPos);
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.S))
+            {
+                nextPos = new Vector2(pos.X, pos.Y + moveDistance);
+                Debug.WriteLine(nextPos);
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.D))
+            {
+                nextPos = new Vector2(pos.X + moveDistance, pos.Y);
+                Debug.WriteLine(nextPos);
+            }
 
+            if (Game1.GetTileAtPosition(nextPos))
+            {
+                Debug.WriteLine("Its clear to walk!");
+                canWalk = true;
+            }
+            else if (!Game1.GetTileAtPosition(nextPos))
+            {
+                Debug.WriteLine("Its a wall! (probably?)");
+                canWalk = false;
             }
         }
 
         public void Update(GameTime gameTime)
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.W) && !previousKeyState.IsKeyDown(Keys.W)) //Moving Up
+            if (Keyboard.GetState().IsKeyDown(Keys.W) && !previousKeyState.IsKeyDown(Keys.W) && Keyboard.GetState().IsKeyUp(Keys.A) && Keyboard.GetState().IsKeyUp(Keys.D)) //Moving Up
             {
                 MovementCheck();
-                if (canWalk)
+                if (canWalk == true)
                 {
                     pos.Y -= moveDistance;
                     Debug.WriteLine("Going Up!");
                 }
                 previousKeyState = Keyboard.GetState();
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.A) && !previousKeyState.IsKeyDown(Keys.A)) //Moving Left
+            else if (Keyboard.GetState().IsKeyDown(Keys.A) && !previousKeyState.IsKeyDown(Keys.A) && Keyboard.GetState().IsKeyUp(Keys.W) && Keyboard.GetState().IsKeyUp(Keys.S)) //Moving Left
             {
                 MovementCheck();
-                if (canWalk)
+                if (canWalk == true)
                 {
                     pos.X -= moveDistance;
                     Debug.WriteLine("Going Left!");
                 }
                 previousKeyState = Keyboard.GetState();
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.S) && !previousKeyState.IsKeyDown(Keys.S)) //Moving Down
+            else if (Keyboard.GetState().IsKeyDown(Keys.S) && !previousKeyState.IsKeyDown(Keys.S) && Keyboard.GetState().IsKeyUp(Keys.A) && Keyboard.GetState().IsKeyUp(Keys.D)) //Moving Down
             {
                 MovementCheck();
-                if (canWalk)
+                if (canWalk == true)
                 {
                     pos.Y += moveDistance;
                     Debug.WriteLine("Going Down!");
                 }
                 previousKeyState = Keyboard.GetState();
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.D) && !previousKeyState.IsKeyDown(Keys.D)) //Moving Right
+            else if (Keyboard.GetState().IsKeyDown(Keys.D) && !previousKeyState.IsKeyDown(Keys.D) && Keyboard.GetState().IsKeyUp(Keys.W) && Keyboard.GetState().IsKeyUp(Keys.S)) //Moving Right
             {
                 MovementCheck();
-                if (canWalk)
+                if (canWalk == true)
                 {
                     pos.X += moveDistance;
                     Debug.WriteLine("Going Right!");
