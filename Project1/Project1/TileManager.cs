@@ -19,7 +19,7 @@ namespace Zelda
     {
         public static Tile[,] tiles;
         Texture2D tileset;
-        readonly int tileSize = 16;
+        public readonly int tileSize = 16;
         public Tile[] tileTypes;
         List<string>Map = new List<string>();
         int tileId;

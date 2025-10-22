@@ -22,14 +22,14 @@ namespace Zelda
         float moveDistance = 16; //Same as tile width and height
         KeyboardState previousKeyState;
         bool canWalk = true;
-        //Rectangle hitBox;
-
+        Rectangle hitBox;
         Vector2 nextPos;
 
-        public Player(Texture2D tex, Vector2 pos)
+        public Player(Texture2D tex, Vector2 pos, Rectangle hitbox)
         {
             this.tex = tex;
             this.pos = pos;
+            this.hitBox = hitbox;
         }
 
         public void MovementCheck()
@@ -117,7 +117,7 @@ namespace Zelda
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(tex, pos, Color.White);
+            spriteBatch.Draw(tex, pos, hitBox, Color.White);
         }
     }
 }

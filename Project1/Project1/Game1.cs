@@ -18,8 +18,12 @@ namespace Project1
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
 
+        Enemies enemies;
+        Texture2D enemyTex;
+
         Player player;
         Texture2D playerTex;
+
         TileManager tileManager;
         Texture2D tileset;
 
@@ -36,16 +40,17 @@ namespace Project1
             IsMouseVisible = true;
         }
 
-        public enum gameStates
+        public enum GameStates
         {
             StartScreen,
             GamePlay,
             GameEnd
         }
+        GameStates gamestates = GameStates.GamePlay;
 
         public static bool GetTileAtPosition(Vector2 vec)
         {
-            return TileManager.tiles[(int)vec.X/16, (int)vec.Y/16].isWalkable;
+            return TileManager.tiles[(int)vec.X/16, (int)vec.Y/16].isWalkable; //16 in this insatnce refers to the width & height of the tile. 
         }
 
         protected override void Initialize()
@@ -63,8 +68,11 @@ namespace Project1
             tileset = Content.Load<Texture2D>("tileMap");
             tileManager.LoadTileMap("tilemap.txt", tileset);
 
+            enemyTex = Content.Load<Texture2D>("testLink(1)");
+            enemies = new Enemies(new Vector2(32, 32), enemyTex, new Rectangle());
+
             playerTex = Content.Load<Texture2D>("testLink(1)");
-            player = new Player(playerTex, new Vector2((tileAmountWidth * tileSize) - tileSize , (tileAmountHeight * tileSize) - tileSize));
+            player = new Player(playerTex, new Vector2((tileAmountWidth * tileSize) - tileSize , (tileAmountHeight * tileSize) - tileSize), new Rectangle());
             // TODO: use this.Content to load your game content here
         }
 
@@ -72,20 +80,48 @@ namespace Project1
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            // TODO: Add your update logic here
-            player.Update(gameTime);
+
+            //Update logic here
+            if (gamestates == GameStates.StartScreen)
+            {
+
+            }
+            else if (gamestates == GameStates.GamePlay)
+            {
+                player.Update(gameTime);
+                enemies.Update(gameTime);
+            }
+            else if (gamestates == GameStates.GameEnd)
+            {
+
+            }
+
+            //Base Update
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(Color.Red);
 
-            // TODO: Add your drawing code here
             float zoom = 1.75f;
             spriteBatch.Begin(SpriteSortMode.BackToFront, null, SamplerState.PointWrap, null, transformMatrix: Matrix.CreateScale(zoom));
-            tileManager.Draw(spriteBatch);
-            player.Draw(spriteBatch);
+
+            if (gamestates == GameStates.StartScreen)
+            {
+
+            }
+            else if (gamestates == GameStates.GamePlay)
+            {
+                tileManager.Draw(spriteBatch);
+                player.Draw(spriteBatch);
+                enemies.Draw(spriteBatch);
+            }
+            else if (gamestates == GameStates.GameEnd)
+            {
+
+            }
+
             spriteBatch.End();
 
             base.Draw(gameTime);
