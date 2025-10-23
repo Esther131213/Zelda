@@ -9,16 +9,17 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using Zelda;
-using System.Diagnostics;
 
 namespace Project1
 {
+    //To download the editor: dotnet tool install --global dotnet-mgcb-editor
     public class Game1 : Game
     {
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
 
-        Enemies enemies;
+        Enemies enemy1;
+        Enemies enemy2;
         Texture2D enemyTex;
 
         Player player;
@@ -68,12 +69,13 @@ namespace Project1
             tileset = Content.Load<Texture2D>("tileMap");
             tileManager.LoadTileMap("tilemap.txt", tileset);
 
-            enemyTex = Content.Load<Texture2D>("testLink(1)");
-            enemies = new Enemies(new Vector2(32, 32), enemyTex, new Rectangle());
-
             playerTex = Content.Load<Texture2D>("testLink(1)");
-            player = new Player(playerTex, new Vector2((tileAmountWidth * tileSize) - tileSize , (tileAmountHeight * tileSize) - tileSize), new Rectangle());
-            // TODO: use this.Content to load your game content here
+            player = new Player(playerTex, new Vector2((tileAmountWidth * tileSize) - tileSize, (tileAmountHeight * tileSize) - tileSize));
+
+            enemyTex = playerTex;
+            enemy1 = new Enemies(new Vector2(tileSize * 2, tileSize * 6), enemyTex);
+            enemy2 = new Enemies(new Vector2(tileSize * 33, tileSize * 12), enemyTex);
+            enemy2.maxTime = 10;
         }
 
         protected override void Update(GameTime gameTime)
@@ -89,7 +91,8 @@ namespace Project1
             else if (gamestates == GameStates.GamePlay)
             {
                 player.Update(gameTime);
-                enemies.Update(gameTime);
+                enemy1.Update(gameTime);
+                enemy2.Update(gameTime);
             }
             else if (gamestates == GameStates.GameEnd)
             {
@@ -102,10 +105,11 @@ namespace Project1
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Red);
+            GraphicsDevice.Clear(Color.PaleGreen);
+            base.Draw(gameTime);
 
             float zoom = 1.75f;
-            spriteBatch.Begin(SpriteSortMode.BackToFront, null, SamplerState.PointWrap, null, transformMatrix: Matrix.CreateScale(zoom));
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, transformMatrix: Matrix.CreateScale(zoom));
 
             if (gamestates == GameStates.StartScreen)
             {
@@ -115,16 +119,14 @@ namespace Project1
             {
                 tileManager.Draw(spriteBatch);
                 player.Draw(spriteBatch);
-                enemies.Draw(spriteBatch);
+                enemy1.Draw(spriteBatch);
+                enemy2.Draw(spriteBatch);
             }
             else if (gamestates == GameStates.GameEnd)
             {
 
             }
-
             spriteBatch.End();
-
-            base.Draw(gameTime);
         }
     }
 }

@@ -16,20 +16,21 @@ namespace Zelda
     {
         TileManager tileManager;
 
-        new Vector2 pos;
-        Texture2D tex;
+        public Vector2 pos;
+        public Texture2D tex;
         public bool hasKey = false;
         float moveDistance = 16; //Same as tile width and height
         KeyboardState previousKeyState;
         bool canWalk = true;
-        Rectangle hitBox;
+        public Rectangle hitBox;
         Vector2 nextPos;
 
-        public Player(Texture2D tex, Vector2 pos, Rectangle hitbox)
+        public Player(Texture2D tex, Vector2 pos)
         {
             this.tex = tex;
             this.pos = pos;
-            this.hitBox = hitbox;
+            hitBox.Height = tex.Height;
+            hitBox.Width = tex.Width;
         }
 
         public void MovementCheck()

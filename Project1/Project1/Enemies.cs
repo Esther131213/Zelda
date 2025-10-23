@@ -8,25 +8,31 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using Project1;
+using System.Threading;
+using System.Security.Cryptography.Pkcs;
 
 
 namespace Zelda
 {
-    internal class Enemies
+    public class Enemies
     {
-        new Vector2 pos;
-        Texture2D tex;
-        int direction; //1 = Right, -1 = Left
-        Rectangle hitBox;
+        public Vector2 pos;
+        public Texture2D tex;
+        int direction = 1; //1 = Right, -1 = Left
+        public Rectangle hitBox;
         float moveDistance = 16;
         Vector2 nextPos;
         bool canWalk = true;
+        int timer;
+        public int maxTime = 16;
 
-        public Enemies(Vector2 pos, Texture2D tex, Rectangle hitbox)
+
+        public Enemies(Vector2 pos, Texture2D tex)
         {
             this.pos = pos;
             this.tex = tex;
-            this.hitBox = hitbox;
+            hitBox.Width = tex.Width;
+            hitBox.Height = tex.Height;
         }
         public void MovementCheck()
         {
@@ -42,10 +48,12 @@ namespace Zelda
             if (Game1.GetTileAtPosition(nextPos))
             {
                 canWalk = true;
+                timer++;
             }
             else if (!Game1.GetTileAtPosition(nextPos))
             {
                 canWalk = false;
+                timer++;
             }
         }
 
@@ -53,13 +61,16 @@ namespace Zelda
         {
             MovementCheck();
 
-            if (canWalk)
+            if (canWalk && timer >= maxTime)
             {
                 pos = nextPos;
+                timer = 0;
             }
-            else
+            else if(!canWalk && timer >= maxTime)
             {
                 direction *= -1;
+                timer = 0;
+                Debug.WriteLine(pos);
             }
         }
 
