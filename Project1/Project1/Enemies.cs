@@ -26,13 +26,12 @@ namespace Zelda
         int timer;
         public int maxTime = 16;
 
-
         public Enemies(Vector2 pos, Texture2D tex)
         {
             this.pos = pos;
             this.tex = tex;
-            hitBox.Width = tex.Width;
-            hitBox.Height = tex.Height;
+            hitBox.Height = 4;
+            hitBox.Width = 4;
         }
         public void MovementCheck()
         {
@@ -70,13 +69,16 @@ namespace Zelda
             {
                 direction *= -1;
                 timer = 0;
-                Debug.WriteLine(pos);
+                //Debug.WriteLine(pos);
             }
+
+            hitBox.X = (int)pos.X;
+            hitBox.Y = (int)pos.Y;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(tex, pos, hitBox, Color.White);
+            spriteBatch.Draw(tex, pos, Color.White);
         }
     }
 }

@@ -9,6 +9,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using Zelda;
+using SharpDX.DXGI;
+using SharpDX.DirectWrite;
 
 namespace Project1
 {
@@ -31,6 +33,8 @@ namespace Project1
         int tileSize = 16;
         int tileAmountHeight = 28;
         int tileAmountWidth = 45;
+
+        bool isTouching = false;
 
         public Game1()
         {
@@ -70,7 +74,7 @@ namespace Project1
             tileManager.LoadTileMap("tilemap.txt", tileset);
 
             playerTex = Content.Load<Texture2D>("testLink(1)");
-            player = new Player(playerTex, new Vector2((tileAmountWidth * tileSize) - tileSize, (tileAmountHeight * tileSize) - tileSize));
+            player = new Player(playerTex, new Vector2((tileAmountWidth * tileSize) - tileSize, (tileAmountHeight * tileSize) - tileSize), 3);
 
             enemyTex = playerTex;
             enemy1 = new Enemies(new Vector2(tileSize * 2, tileSize * 6), enemyTex);
@@ -90,9 +94,25 @@ namespace Project1
             }
             else if (gamestates == GameStates.GamePlay)
             {
+                if (player.playerHealth <= 0)
+                {
+                    gamestates = GameStates.GameEnd;
+                }
+
                 player.Update(gameTime);
                 enemy1.Update(gameTime);
                 enemy2.Update(gameTime);
+
+                if (player.hitBox.Intersects(enemy1.hitBox) && isTouching == false || player.hitBox.Intersects(enemy2.hitBox) && isTouching == false)
+                {
+                    Debug.WriteLine("Theyre touching!");
+                    player.PlayerTakeDamage();
+                    isTouching = true;
+                }
+                else if(!player.hitBox.Intersects(enemy1.hitBox) && !player.hitBox.Intersects(enemy2.hitBox) && isTouching == true)
+                {
+                    isTouching = false;
+                }
             }
             else if (gamestates == GameStates.GameEnd)
             {
@@ -105,7 +125,7 @@ namespace Project1
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.PaleGreen);
+            GraphicsDevice.Clear(Color.DarkRed);
             base.Draw(gameTime);
 
             float zoom = 1.75f;

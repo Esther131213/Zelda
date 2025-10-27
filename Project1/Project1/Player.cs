@@ -24,13 +24,21 @@ namespace Zelda
         bool canWalk = true;
         public Rectangle hitBox;
         Vector2 nextPos;
+        public int playerHealth;
 
-        public Player(Texture2D tex, Vector2 pos)
+        public Player(Texture2D tex, Vector2 pos, int playerHealth)
         {
             this.tex = tex;
             this.pos = pos;
-            hitBox.Height = tex.Height;
-            hitBox.Width = tex.Width;
+            this.playerHealth = playerHealth;
+            hitBox.Height = 4;
+            hitBox.Width = 4;
+        }
+
+        public void PlayerTakeDamage()
+        {
+            playerHealth--;
+            Debug.WriteLine("player health: " + playerHealth);
         }
 
         public void MovementCheck()
@@ -38,32 +46,32 @@ namespace Zelda
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
                 nextPos = new Vector2(pos.X, pos.Y - moveDistance);
-                Debug.WriteLine(nextPos);
+                //Debug.WriteLine(nextPos);
             }
             else if (Keyboard.GetState().IsKeyDown(Keys.A))
             {
                 nextPos = new Vector2(pos.X - moveDistance, pos.Y);
-                Debug.WriteLine(nextPos);
+                //Debug.WriteLine(nextPos);
             }
             else if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
                 nextPos = new Vector2(pos.X, pos.Y + moveDistance);
-                Debug.WriteLine(nextPos);
+                //Debug.WriteLine(nextPos);
             }
             else if (Keyboard.GetState().IsKeyDown(Keys.D))
             {
                 nextPos = new Vector2(pos.X + moveDistance, pos.Y);
-                Debug.WriteLine(nextPos);
+                //Debug.WriteLine(nextPos);
             }
 
             if (Game1.GetTileAtPosition(nextPos))
             {
-                Debug.WriteLine("Its clear to walk!");
+                //Debug.WriteLine("Its clear to walk!");
                 canWalk = true;
             }
             else if (!Game1.GetTileAtPosition(nextPos))
             {
-                Debug.WriteLine("Its a wall! (probably?)");
+                //Debug.WriteLine("Its a wall! (probably?)");
                 canWalk = false;
             }
         }
@@ -76,7 +84,7 @@ namespace Zelda
                 if (canWalk == true)
                 {
                     pos.Y -= moveDistance;
-                    Debug.WriteLine("Going Up!");
+                    //Debug.WriteLine("Going Up!");
                 }
                 previousKeyState = Keyboard.GetState();
             }
@@ -86,7 +94,7 @@ namespace Zelda
                 if (canWalk == true)
                 {
                     pos.X -= moveDistance;
-                    Debug.WriteLine("Going Left!");
+                    //Debug.WriteLine("Going Left!");
                 }
                 previousKeyState = Keyboard.GetState();
             }
@@ -96,7 +104,7 @@ namespace Zelda
                 if (canWalk == true)
                 {
                     pos.Y += moveDistance;
-                    Debug.WriteLine("Going Down!");
+                    //Debug.WriteLine("Going Down!");
                 }
                 previousKeyState = Keyboard.GetState();
             }
@@ -106,7 +114,7 @@ namespace Zelda
                 if (canWalk == true)
                 {
                     pos.X += moveDistance;
-                    Debug.WriteLine("Going Right!");
+                    //Debug.WriteLine("Going Right!");
                 }
                 previousKeyState = Keyboard.GetState();
             }
@@ -114,11 +122,13 @@ namespace Zelda
             {
                 previousKeyState = Keyboard.GetState();
             }
+            hitBox.X = (int)pos.X;
+            hitBox.Y = (int)pos.Y;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(tex, pos, hitBox, Color.White);
+            spriteBatch.Draw(tex, pos, Color.White);
         }
     }
 }
