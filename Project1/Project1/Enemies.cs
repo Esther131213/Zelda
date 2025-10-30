@@ -30,8 +30,8 @@ namespace Zelda
         {
             this.pos = pos;
             this.tex = tex;
-            hitBox.Height = 4;
-            hitBox.Width = 4;
+            hitBox.Height = tex.Height;
+            hitBox.Width = tex.Width;
         }
         public void MovementCheck()
         {

@@ -27,8 +27,17 @@ namespace Project1
         Player player;
         Texture2D playerTex;
 
+        Key key;
+        Texture2D keyTex;
+
+        Door door;
+        Texture2D doorTex;
+
         TileManager tileManager;
         Texture2D tileset;
+
+        Texture2D zelda;
+        Texture2D Lockness;
 
         int tileSize = 16;
         int tileAmountHeight = 28;
@@ -53,11 +62,6 @@ namespace Project1
         }
         GameStates gamestates = GameStates.GamePlay;
 
-        public static bool GetTileAtPosition(Vector2 vec)
-        {
-            return TileManager.tiles[(int)vec.X/16, (int)vec.Y/16].isWalkable; //16 in this insatnce refers to the width & height of the tile. 
-        }
-
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
@@ -80,6 +84,20 @@ namespace Project1
             enemy1 = new Enemies(new Vector2(tileSize * 2, tileSize * 6), enemyTex);
             enemy2 = new Enemies(new Vector2(tileSize * 33, tileSize * 12), enemyTex);
             enemy2.maxTime = 10;
+
+            keyTex = playerTex;
+            key = new Key(keyTex, new Vector2(tileSize * 41, tileSize * 8));
+
+            doorTex = playerTex;
+            door = new Door(keyTex, new Vector2(tileSize * 28, tileSize * 3));
+
+            zelda = playerTex;
+            Lockness = Content.Load<Texture2D>("LocknessLink");
+        }
+
+        public static bool GetTileAtPosition(Vector2 vec)
+        {
+            return TileManager.tiles[(int)vec.X / 16, (int)vec.Y / 16].isWalkable; //16 in this insatnce refers to the width & height of the tile. 
         }
 
         protected override void Update(GameTime gameTime)
@@ -99,10 +117,6 @@ namespace Project1
                     gamestates = GameStates.GameEnd;
                 }
 
-                player.Update(gameTime);
-                enemy1.Update(gameTime);
-                enemy2.Update(gameTime);
-
                 if (player.hitBox.Intersects(enemy1.hitBox) && isTouching == false || player.hitBox.Intersects(enemy2.hitBox) && isTouching == false)
                 {
                     Debug.WriteLine("Theyre touching!");
@@ -113,6 +127,25 @@ namespace Project1
                 {
                     isTouching = false;
                 }
+
+                if (player.hitBox.Intersects(key.hitBox))
+                {
+                    player.PickUpKey();
+                    key.KeyIsTouched();
+                }
+
+                if (player.hitBox.Intersects(door.hitBox))
+                {
+                    player.touchingDoor = true;
+                }
+                else if (!player.hitBox.Intersects(door.hitBox))
+                {
+                    player.touchingDoor = false;
+                }
+
+                player.Update(gameTime);
+                enemy1.Update(gameTime);
+                enemy2.Update(gameTime);
             }
             else if (gamestates == GameStates.GameEnd)
             {
@@ -138,9 +171,13 @@ namespace Project1
             else if (gamestates == GameStates.GamePlay)
             {
                 tileManager.Draw(spriteBatch);
-                player.Draw(spriteBatch);
                 enemy1.Draw(spriteBatch);
                 enemy2.Draw(spriteBatch);
+                key.Draw(spriteBatch);
+                door.Draw(spriteBatch);
+                spriteBatch.Draw(zelda, new Vector2(tileSize * 28, tileSize * 1), Color.White);
+                player.Draw(spriteBatch);
+                spriteBatch.Draw(Lockness, new Vector2(tileSize * 36, tileSize * 15), Color.White);
             }
             else if (gamestates == GameStates.GameEnd)
             {

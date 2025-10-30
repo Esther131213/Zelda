@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using Project1;
+using System.Threading;
 
 namespace Zelda
 {
@@ -21,18 +22,27 @@ namespace Zelda
         public bool hasKey = false;
         float moveDistance = 16; //Same as tile width and height
         KeyboardState previousKeyState;
-        bool canWalk = true;
+        public bool canWalk = true;
         public Rectangle hitBox;
-        Vector2 nextPos;
+        public Vector2 nextPos;
         public int playerHealth;
+        public bool touchingDoor = false;
+        int timer = 100;
+
+        Color linkColor = Color.White;
 
         public Player(Texture2D tex, Vector2 pos, int playerHealth)
         {
             this.tex = tex;
             this.pos = pos;
             this.playerHealth = playerHealth;
-            hitBox.Height = 4;
-            hitBox.Width = 4;
+            hitBox.Height = tex.Height;
+            hitBox.Width = tex.Width;
+        }
+
+        public void PickUpKey()
+        {
+            hasKey = true;
         }
 
         public void PlayerTakeDamage()
@@ -78,7 +88,7 @@ namespace Zelda
 
         public void Update(GameTime gameTime)
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.W) && !previousKeyState.IsKeyDown(Keys.W) && Keyboard.GetState().IsKeyUp(Keys.A) && Keyboard.GetState().IsKeyUp(Keys.D)) //Moving Up
+            if (Keyboard.GetState().IsKeyDown(Keys.W) && !previousKeyState.IsKeyDown(Keys.W) && Keyboard.GetState().IsKeyUp(Keys.A) && Keyboard.GetState().IsKeyUp(Keys.D) && (touchingDoor == false || hasKey == true)) //Moving Up
             {
                 MovementCheck();
                 if (canWalk == true)
@@ -128,7 +138,7 @@ namespace Zelda
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(tex, pos, Color.White);
+            spriteBatch.Draw(tex, pos, linkColor);
         }
     }
 }
