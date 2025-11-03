@@ -57,9 +57,10 @@ namespace Project1
         {
             StartScreen,
             GamePlay,
-            GameEnd
+            GameEnd,
+            Looser
         }
-        GameStates gamestates = GameStates.GamePlay;
+        GameStates gamestates = GameStates.StartScreen;
 
         protected override void Initialize()
         {
@@ -103,7 +104,10 @@ namespace Project1
             //Update logic here
             if (gamestates == GameStates.StartScreen)
             {
-
+                if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+                {
+                    gamestates = GameStates.GamePlay;
+                }
             }
             else if (gamestates == GameStates.GamePlay)
             {
@@ -113,7 +117,7 @@ namespace Project1
 
                 if (player.playerHealth <= 0)
                 {
-                    gamestates = GameStates.GameEnd;
+                    gamestates = GameStates.Looser;
                 }
 
                 if ((player.hitBox.Intersects(enemy1.hitBox) && isTouching == false) || (player.hitBox.Intersects(enemy2.hitBox) && isTouching == false))
@@ -138,6 +142,7 @@ namespace Project1
                     player.touchingDoor = true;
                     key.exists = false;
                     door.exists = false;
+                    gamestates = GameStates.GameEnd;
                 }
                 else if (player.hitBox.Intersects(door.hitBox))
                 {
@@ -156,6 +161,34 @@ namespace Project1
                 else
                 {
 
+                }
+
+                if (player.attackBox.Intersects(enemy1.hitBox))
+                {
+                    enemy1.TakeDamage();
+                    Debug.WriteLine("it hit!");
+                    player.attackBox.X = 5000;
+                    enemy1.hitBox.X = 7000;
+                }
+                else if (player.attackBox.Intersects(enemy2.hitBox))
+                {
+                    enemy2.TakeDamage();
+                    Debug.WriteLine("it hit!");
+                    player.attackBox.X = 5000;
+                    enemy2.hitBox.X = 7000;
+                }
+                else
+                {
+
+                }
+
+                if (Keyboard.GetState().IsKeyDown(Keys.Up) || Keyboard.GetState().IsKeyDown(Keys.Left) || Keyboard.GetState().IsKeyDown(Keys.Down) || Keyboard.GetState().IsKeyDown(Keys.Right))
+                {
+                    player.tex = TextureHandler.Attacking;
+                }
+                else
+                {
+                    player.tex = TextureHandler.Link;
                 }
             }
             else if (gamestates == GameStates.GameEnd)
@@ -177,7 +210,9 @@ namespace Project1
 
             if (gamestates == GameStates.StartScreen)
             {
-
+                spriteBatch.Draw(TextureHandler.StartTexture, new Vector2(0, 0), Color.White);
+                spriteBatch.Draw(Lockness, new Vector2(tileSize * 21, tileSize * 11), Color.White);
+                spriteBatch.Draw(TextureHandler.Link, new Vector2(tileSize * 37, tileSize * 21), Color.White);
             }
             else if (gamestates == GameStates.GamePlay)
             {
@@ -192,8 +227,17 @@ namespace Project1
             }
             else if (gamestates == GameStates.GameEnd)
             {
+                tileManager.Draw(spriteBatch);
+                spriteBatch.Draw(TextureHandler.Link, new Vector2(tileSize * 21, tileSize * 4), Color.White);
+                spriteBatch.Draw(TextureHandler.Link, new Vector2(tileSize * 22, tileSize * 4), Color.LightGreen);
+                spriteBatch.Draw(TextureHandler.Key, new Vector2(tileSize * 40, tileSize * 16), Color.White);
+                spriteBatch.Draw(Lockness, new Vector2(tileSize * 36, tileSize * 15), Color.White);
+            }
+            else if (gamestates == GameStates.Looser)
+            {
 
             }
+
             spriteBatch.End();
         }
     }

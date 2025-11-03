@@ -10,6 +10,7 @@ using System.Diagnostics;
 using Project1;
 using System.Threading;
 using System.Security.Cryptography.Pkcs;
+using System.DirectoryServices.ActiveDirectory;
 
 
 namespace Zelda
@@ -25,6 +26,8 @@ namespace Zelda
         bool canWalk = true;
         int timer;
         public int maxTime = 16;
+        public int enemyHealth = 2;
+        bool exists = true;
 
         public Enemies(Vector2 pos, Texture2D tex)
         {
@@ -33,6 +36,13 @@ namespace Zelda
             hitBox.Height = tex.Height;
             hitBox.Width = tex.Width;
         }
+
+        public void TakeDamage()
+        {
+            enemyHealth--;
+            Debug.WriteLine("Ouch! " + enemyHealth);
+        }
+
         public void MovementCheck()
         {
             if (direction == 1)
@@ -58,27 +68,38 @@ namespace Zelda
 
         public void Update(GameTime gameTime)
         {
-            MovementCheck();
-
-            if (canWalk && timer >= maxTime)
+            if (exists == true)
             {
-                pos = nextPos;
-                timer = 0;
-            }
-            else if(!canWalk && timer >= maxTime)
-            {
-                direction *= -1;
-                timer = 0;
-                //Debug.WriteLine(pos);
-            }
+                MovementCheck();
 
-            hitBox.X = (int)pos.X;
-            hitBox.Y = (int)pos.Y;
+                if (canWalk && timer >= maxTime)
+                {
+                    pos = nextPos;
+                    timer = 0;
+                }
+                else if (!canWalk && timer >= maxTime)
+                {
+                    direction *= -1;
+                    timer = 0;
+                    //Debug.WriteLine(pos);
+                }
+
+                if (enemyHealth <= 0)
+                {
+                    exists = false;
+                }
+
+                hitBox.X = (int)pos.X;
+                hitBox.Y = (int)pos.Y;
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(tex, pos, Color.DarkGray);
+            if (exists == true)
+            {
+                spriteBatch.Draw(tex, pos, Color.DarkGray);
+            }
         }
     }
 }

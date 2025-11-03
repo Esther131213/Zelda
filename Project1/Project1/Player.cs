@@ -20,7 +20,7 @@ namespace Zelda
         public Vector2 pos;
         public Texture2D tex;
         public bool hasKey = false;
-        float moveDistance = 16; //Same as tile width and height
+        int moveDistance = 16; //Same as tile width and height
         KeyboardState previousKeyState;
         public bool canWalk = true;
         public Rectangle hitBox;
@@ -28,6 +28,8 @@ namespace Zelda
         public int playerHealth;
         public bool touchingDoor = false;
         int timer = 100;
+        public Rectangle attackBox;
+        public bool isAttacking;
 
         Color linkColor = Color.White;
 
@@ -38,6 +40,8 @@ namespace Zelda
             this.playerHealth = playerHealth;
             hitBox.Height = tex.Height;
             hitBox.Width = tex.Width;
+            attackBox.Height = tex.Height;
+            attackBox.Width = tex.Width;
         }
 
         public void PickUpKey()
@@ -49,6 +53,36 @@ namespace Zelda
         {
             playerHealth--;
             Debug.WriteLine("player health: " + playerHealth);
+        }
+
+        public void Attacking()
+        {
+            if (Keyboard.GetState().IsKeyDown(Keys.Up))
+            {
+                attackBox.Y = (int)pos.Y - moveDistance;
+                attackBox.X = (int)pos.X;
+                Debug.WriteLine(attackBox.X + " " + attackBox.Y);
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            {
+                attackBox.X = (int)pos.X - moveDistance;
+                attackBox.Y = (int)pos.Y;
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.Down))
+            {
+                attackBox.Y = (int)pos.Y + moveDistance;
+                attackBox.X = (int)pos.X;
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            {
+                attackBox.X = (int)pos.X + moveDistance;
+                attackBox.Y = (int)pos.Y;
+            }
+            else
+            {
+                attackBox.Y = 5000;
+                attackBox.X = 5000;
+            }
         }
 
         public void MovementCheck()
@@ -73,7 +107,6 @@ namespace Zelda
                 nextPos = new Vector2(pos.X + moveDistance, pos.Y);
                 //Debug.WriteLine(nextPos);
             }
-
             if (Game1.GetTileAtPosition(nextPos))
             {
                 //Debug.WriteLine("Its clear to walk!");
@@ -94,7 +127,6 @@ namespace Zelda
                 if (canWalk == true)
                 {
                     pos.Y -= moveDistance;
-                    //Debug.WriteLine("Going Up!");
                 }
                 previousKeyState = Keyboard.GetState();
             }
@@ -104,7 +136,6 @@ namespace Zelda
                 if (canWalk == true)
                 {
                     pos.X -= moveDistance;
-                    //Debug.WriteLine("Going Left!");
                 }
                 previousKeyState = Keyboard.GetState();
             }
@@ -114,7 +145,6 @@ namespace Zelda
                 if (canWalk == true)
                 {
                     pos.Y += moveDistance;
-                    //Debug.WriteLine("Going Down!");
                 }
                 previousKeyState = Keyboard.GetState();
             }
@@ -124,12 +154,36 @@ namespace Zelda
                 if (canWalk == true)
                 {
                     pos.X += moveDistance;
-                    //Debug.WriteLine("Going Right!");
                 }
+                previousKeyState = Keyboard.GetState();
+            }//Movement check end, Attack check begins
+            else if (Keyboard.GetState().IsKeyDown(Keys.Up) && !previousKeyState.IsKeyDown(Keys.Up))
+            {
+                isAttacking = true;
+                Attacking();
+                previousKeyState = Keyboard.GetState();
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.Left) && !previousKeyState.IsKeyDown(Keys.Left))
+            {
+                isAttacking = true;
+                Attacking();
+                previousKeyState = Keyboard.GetState();
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.Down) && !previousKeyState.IsKeyDown(Keys.Down))
+            {
+                isAttacking = true;
+                Attacking();
+                previousKeyState = Keyboard.GetState();
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.Right) && !previousKeyState.IsKeyDown(Keys.Right))
+            {
+                isAttacking = true;
+                Attacking();
                 previousKeyState = Keyboard.GetState();
             }
             else
             {
+                isAttacking = false;
                 previousKeyState = Keyboard.GetState();
             }
             hitBox.X = (int)pos.X;

@@ -29,8 +29,8 @@ namespace Zelda
         }
 
         public void Draw(SpriteBatch spriteBatch)
-        {spriteBatch.Draw(tex, new Rectangle((int)pos.X, (int)pos.Y, tileSize, tileSize), sourceRectangle, Color.White);
-            
+        {
+            spriteBatch.Draw(tex, new Rectangle((int)pos.X, (int)pos.Y, tileSize, tileSize), sourceRectangle, Color.White);
         }
     }
 }

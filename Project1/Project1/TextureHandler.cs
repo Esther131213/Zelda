@@ -18,6 +18,8 @@ namespace Zelda
         public static Texture2D Link;
         public static Texture2D Linkness;
         public static Texture2D Key;
+        public static Texture2D StartTexture;
+        public static Texture2D Attacking;
 
         public static void LoadTextures(ContentManager content)
         {
@@ -25,6 +27,8 @@ namespace Zelda
             Link = content.Load<Texture2D>("testLink(1)");
             Linkness = content.Load<Texture2D>("LocknessLink");
             Key = content.Load<Texture2D>("Namnlös");
+            StartTexture = content.Load<Texture2D>("PressToStart");
+            Attacking = content.Load<Texture2D>("textLinkAttack");
         }
     }
 }
