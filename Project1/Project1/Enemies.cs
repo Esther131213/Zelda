@@ -78,7 +78,7 @@ namespace Zelda
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(tex, pos, Color.White);
+            spriteBatch.Draw(tex, pos, Color.DarkGray);
         }
     }
 }

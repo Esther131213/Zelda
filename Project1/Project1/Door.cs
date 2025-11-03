@@ -13,7 +13,7 @@ namespace Zelda
     {
         Texture2D tex;
         public Rectangle hitBox;
-        bool exists = true;
+        public bool exists = true;
 
         public Door(Texture2D tex, Vector2 pos)
         {
@@ -35,7 +35,7 @@ namespace Zelda
         {
             if (exists)
             {
-                spriteBatch.Draw(tex, hitBox, Color.White);
+                spriteBatch.Draw(tex, hitBox, Color.DarkRed);
             }
         }
     }

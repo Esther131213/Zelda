@@ -22,28 +22,27 @@ namespace Project1
 
         Enemies enemy1;
         Enemies enemy2;
-        Texture2D enemyTex;
 
         Player player;
-        Texture2D playerTex;
 
         Key key;
         Texture2D keyTex;
 
         Door door;
-        Texture2D doorTex;
-
-        TileManager tileManager;
-        Texture2D tileset;
 
         Texture2D zelda;
         Texture2D Lockness;
+
+        TileManager tileManager;
+
+        int keyUpOffset = -10;
+        int keySideOffset = 3;
 
         int tileSize = 16;
         int tileAmountHeight = 28;
         int tileAmountWidth = 45;
 
-        bool isTouching = false;
+        bool isTouching = true;
 
         public Game1()
         {
@@ -72,32 +71,28 @@ namespace Project1
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            TextureHandler.LoadTextures(Content);
 
             tileManager = new TileManager();
-            tileset = Content.Load<Texture2D>("tileMap");
-            tileManager.LoadTileMap("tilemap.txt", tileset);
-
-            playerTex = Content.Load<Texture2D>("testLink(1)");
-            player = new Player(playerTex, new Vector2((tileAmountWidth * tileSize) - tileSize, (tileAmountHeight * tileSize) - tileSize), 3);
-
-            enemyTex = playerTex;
-            enemy1 = new Enemies(new Vector2(tileSize * 2, tileSize * 6), enemyTex);
-            enemy2 = new Enemies(new Vector2(tileSize * 33, tileSize * 12), enemyTex);
+            tileManager.LoadTileMap("tilemap.txt", TextureHandler.TileMap);
+            player = new Player(TextureHandler.Link, new Vector2((tileAmountWidth * tileSize) - tileSize, (tileAmountHeight * tileSize) - tileSize), 3);
+            enemy1 = new Enemies(new Vector2(tileSize * 2, tileSize * 6), TextureHandler.Link);
+            enemy2 = new Enemies(new Vector2(tileSize * 33, tileSize * 12), TextureHandler.Link);
             enemy2.maxTime = 10;
 
-            keyTex = playerTex;
-            key = new Key(keyTex, new Vector2(tileSize * 41, tileSize * 8));
+            key = new Key(TextureHandler.Key, new Vector2(tileSize * 41, tileSize * 8));
 
-            doorTex = playerTex;
-            door = new Door(keyTex, new Vector2(tileSize * 28, tileSize * 3));
+            door = new Door(TextureHandler.Link, new Vector2(tileSize * 28, tileSize * 3));
 
-            zelda = playerTex;
-            Lockness = Content.Load<Texture2D>("LocknessLink");
+            zelda = TextureHandler.Link;
+
+            Lockness = TextureHandler.Linkness;
         }
 
         public static bool GetTileAtPosition(Vector2 vec)
         {
-            return TileManager.tiles[(int)vec.X / 16, (int)vec.Y / 16].isWalkable; //16 in this insatnce refers to the width & height of the tile. 
+            int momentTileSize = 16;
+            return TileManager.tiles[(int)vec.X / momentTileSize, (int)vec.Y / momentTileSize].isWalkable; 
         }
 
         protected override void Update(GameTime gameTime)
@@ -112,18 +107,22 @@ namespace Project1
             }
             else if (gamestates == GameStates.GamePlay)
             {
+                player.Update(gameTime);
+                enemy1.Update(gameTime);
+                enemy2.Update(gameTime);
+
                 if (player.playerHealth <= 0)
                 {
                     gamestates = GameStates.GameEnd;
                 }
 
-                if (player.hitBox.Intersects(enemy1.hitBox) && isTouching == false || player.hitBox.Intersects(enemy2.hitBox) && isTouching == false)
+                if ((player.hitBox.Intersects(enemy1.hitBox) && isTouching == false) || (player.hitBox.Intersects(enemy2.hitBox) && isTouching == false))
                 {
                     Debug.WriteLine("Theyre touching!");
                     player.PlayerTakeDamage();
                     isTouching = true;
                 }
-                else if(!player.hitBox.Intersects(enemy1.hitBox) && !player.hitBox.Intersects(enemy2.hitBox) && isTouching == true)
+                else if((!player.hitBox.Intersects(enemy1.hitBox) && isTouching == true) && (!player.hitBox.Intersects(enemy2.hitBox) && isTouching == true))
                 {
                     isTouching = false;
                 }
@@ -134,7 +133,13 @@ namespace Project1
                     key.KeyIsTouched();
                 }
 
-                if (player.hitBox.Intersects(door.hitBox))
+                if (player.hitBox.Intersects(door.hitBox) && player.hasKey)
+                { 
+                    player.touchingDoor = true;
+                    key.exists = false;
+                    door.exists = false;
+                }
+                else if (player.hitBox.Intersects(door.hitBox))
                 {
                     player.touchingDoor = true;
                 }
@@ -143,9 +148,15 @@ namespace Project1
                     player.touchingDoor = false;
                 }
 
-                player.Update(gameTime);
-                enemy1.Update(gameTime);
-                enemy2.Update(gameTime);
+                if (key.pickedUp == true)
+                {
+                    key.hitBox.X = (int)player.pos.X + keySideOffset;
+                    key.hitBox.Y = (int)player.pos.Y + keyUpOffset;
+                }
+                else
+                {
+
+                }
             }
             else if (gamestates == GameStates.GameEnd)
             {
@@ -173,10 +184,10 @@ namespace Project1
                 tileManager.Draw(spriteBatch);
                 enemy1.Draw(spriteBatch);
                 enemy2.Draw(spriteBatch);
-                key.Draw(spriteBatch);
                 door.Draw(spriteBatch);
-                spriteBatch.Draw(zelda, new Vector2(tileSize * 28, tileSize * 1), Color.White);
+                spriteBatch.Draw(zelda, new Vector2(tileSize * 28, tileSize * 1), Color.LightGreen);
                 player.Draw(spriteBatch);
+                key.Draw(spriteBatch);
                 spriteBatch.Draw(Lockness, new Vector2(tileSize * 36, tileSize * 15), Color.White);
             }
             else if (gamestates == GameStates.GameEnd)
