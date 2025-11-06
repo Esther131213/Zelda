@@ -26,12 +26,8 @@ namespace Project1
         Player player;
 
         Key key;
-        Texture2D keyTex;
 
         Door door;
-
-        Texture2D zelda;
-        Texture2D Lockness;
 
         TileManager tileManager;
 
@@ -84,10 +80,6 @@ namespace Project1
             key = new Key(TextureHandler.Key, new Vector2(tileSize * 41, tileSize * 8));
 
             door = new Door(TextureHandler.Link, new Vector2(tileSize * 28, tileSize * 3));
-
-            zelda = TextureHandler.Link;
-
-            Lockness = TextureHandler.Linkness;
         }
 
         public static bool GetTileAtPosition(Vector2 vec)
@@ -211,7 +203,7 @@ namespace Project1
             if (gamestates == GameStates.StartScreen)
             {
                 spriteBatch.Draw(TextureHandler.StartTexture, new Vector2(0, 0), Color.White);
-                spriteBatch.Draw(Lockness, new Vector2(tileSize * 21, tileSize * 11), Color.White);
+                spriteBatch.Draw(TextureHandler.Linkness, new Vector2(tileSize * 21, tileSize * 11), Color.White);
                 spriteBatch.Draw(TextureHandler.Link, new Vector2(tileSize * 37, tileSize * 21), Color.White);
             }
             else if (gamestates == GameStates.GamePlay)
@@ -220,10 +212,10 @@ namespace Project1
                 enemy1.Draw(spriteBatch);
                 enemy2.Draw(spriteBatch);
                 door.Draw(spriteBatch);
-                spriteBatch.Draw(zelda, new Vector2(tileSize * 28, tileSize * 1), Color.LightGreen);
+                spriteBatch.Draw(TextureHandler.Link, new Vector2(tileSize * 28, tileSize * 1), Color.LightGreen);
                 player.Draw(spriteBatch);
                 key.Draw(spriteBatch);
-                spriteBatch.Draw(Lockness, new Vector2(tileSize * 36, tileSize * 15), Color.White);
+                spriteBatch.Draw(TextureHandler.Linkness, new Vector2(tileSize * 36, tileSize * 15), Color.White);
             }
             else if (gamestates == GameStates.GameEnd)
             {
@@ -231,7 +223,7 @@ namespace Project1
                 spriteBatch.Draw(TextureHandler.Link, new Vector2(tileSize * 21, tileSize * 4), Color.White);
                 spriteBatch.Draw(TextureHandler.Link, new Vector2(tileSize * 22, tileSize * 4), Color.LightGreen);
                 spriteBatch.Draw(TextureHandler.Key, new Vector2(tileSize * 40, tileSize * 16), Color.White);
-                spriteBatch.Draw(Lockness, new Vector2(tileSize * 36, tileSize * 15), Color.White);
+                spriteBatch.Draw(TextureHandler.Linkness, new Vector2(tileSize * 36, tileSize * 15), Color.White);
             }
             else if (gamestates == GameStates.Looser)
             {
